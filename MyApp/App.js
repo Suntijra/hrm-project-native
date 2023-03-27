@@ -16,6 +16,7 @@ import {
   Text,
   useColorScheme,
   View,
+  TouchableOpacity, Image, Button
 } from 'react-native';
 
 import {
@@ -25,36 +26,54 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import LoginScreen from './src/components/loginScreen';
 
 // navigate
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-function HomeScreen() {
+const Stack = createNativeStackNavigator();
+function IntroScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen test v1</Text>
+      <View>
+        <TouchableOpacity style={styles.introbtn} onPress={() => navigation.navigate('LoginScreen')}>
+          <Image
+            source={require('./src/assets/imgs/arrow-left-white.png')}
+            style={{ width: 20, height: 16 }}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
-const Stack = createNativeStackNavigator();
-
 function App() {
   return (
-    // <View>
-    //   <Text>test</Text>
-    // </View>
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator screenOptions={{
+        headerShown: false,
+      }}>
+        <Stack.Screen name="intro" component={IntroScreen} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-// const styles = StyleSheet.create({
+const styles = StyleSheet.create({
+  introbtn: {
+    backgroundColor: '#064BF9',
+    padding: 15,
+    borderRadius: 50,
+    width: 45,
+    height: 45,
+    justifyContent: 'center',
+    alignContent: 'center',
+    position: 'absolute',
+    bottom: -300,
+    right: -150
 
-// });
+  }
+});
 
 export default App;
