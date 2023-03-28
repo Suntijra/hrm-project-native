@@ -6,8 +6,8 @@
  * @flow strict-local
  */
 
-import React from 'react';
-// import type {Node} from 'react';
+import { useState } from 'react';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -60,11 +60,13 @@ function IntroScreen({ navigation }) {
 }
 
 function App() {
+  let [firstPage , setFirstPage] = useState('intro')
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{
+      <Stack.Navigator initialRouteName={firstPage} screenOptions={{
         headerShown: false,
-      }}>
+      }}
+      >
         <Stack.Screen name="intro" component={IntroScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Navigator>
