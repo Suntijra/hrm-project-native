@@ -26,7 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import LoginScreen from './src/components/loginScreen';
+import LoginScreen from './src/screen/loginScreen';
 
 // navigate
 import { NavigationContainer } from '@react-navigation/native';
