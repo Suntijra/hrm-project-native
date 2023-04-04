@@ -18,15 +18,16 @@ async function sign_in(email,pwd) {
         let response = await fetch('https://uat.maxmart.store:4040/mobile/login', {
             method: 'POST',
             headers: {
-                "Accept": "*/*"
+                "Accept": "*/*",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 email: email,
                 password: pwd
             })
         })
-        let data = response.json()
-        console.log(data)
+        let data = await response.json()
+        console.log('check ', data)
     } catch (err) {
         console.log(err)
     }
