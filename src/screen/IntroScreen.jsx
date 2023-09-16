@@ -9,10 +9,13 @@ function IntroScreen({ navigation }) {
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: "100%" }}>
             <View style={{ position: 'absolute', zIndex: 10 }}>
                 <TouchableOpacity style={styles.introbtn} onPress={() => navigation.navigate('LoginScreen')}>
+                    <View style={{position:'relative'}}>
                     <Image
                         source={require('../assets/imgs/arrow-left-white.png')}
-                        style={{ width: 20, height: 16 }}
+                        style={{ width: 20 * 1.2, height: 16 * 1.2, position : 'absolute', top: -9 ,left : -4 }}
                     />
+                    </View>
+                    
                 </TouchableOpacity>
             </View>
             <View style={styles.imgintro3}>
