@@ -1,1 +1,5 @@
+node_modules/
 node_modules
+android
+android/.gradle/7.5.1/executionHistory/executionHistory.lock
+android/.gradle/7.5.1/checksums/checksums.lock

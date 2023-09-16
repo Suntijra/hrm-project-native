@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 import HidePwd from '../assets/imgs/pwd_close.png'
 import ShowPwd from '../assets/imgs/pwd_open.png'
 
-async function sign_in(email,pwd) {
+async function confirm_pwd(email,pwd) {
     console.log('clickLogin',email,pwd)
     try {
         let response = await fetch('https://uat.maxmart.store:4040/mobile/login', {
@@ -65,7 +65,7 @@ function RePassword({ navigation }) {
                     onBlur={() => setBorderBluePwd(styles.input)}
                     secureTextEntry={swap} style={borderBluePwd}
                     placeholder="Confirm Password" />
-                <Text style={styles.forgotPwd}>Forget Password?</Text>
+                <Text style={styles.forgotPwd}></Text>
                 <View style={{ width: 100 }}>
                     {swap ? (
                         <TouchableOpacity onPress={swap_hide_show}>
@@ -92,7 +92,7 @@ function RePassword({ navigation }) {
                         )}
 
                 </View>
-                <TouchableOpacity onPress={()=>sign_in(email,pwd)} style={styles.btn_sign_up}>
+                <TouchableOpacity onPress={()=>confirm_pwd(email,pwd)} style={styles.btn_sign_up}>
                     <Text style={{ fontWeight: "700", fontSize: 14 }}>Confirm password</Text>
                 </TouchableOpacity>
             </View>

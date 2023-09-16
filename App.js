@@ -17,34 +17,18 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginScreen from './src/screen/loginScreen';
 import IntroScreen from './src/screen/IntroScreen';
+import RePassword from './src/screen/RePassword';
+import HomeMenu from './src/screen/HomeMenu';
+
 
 // navigate
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
-//จำลอง มี token
-// _setToken = async () => {
-//   try {
-//     await AsyncStorage.setItem('token', 'token_admin');
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
-// _getToken = async () => {
-//   try {
-//     let token = await AsyncStorage.getItem('token');
-//     return token
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
-// _setToken()
-// console.log('testttttttt')
-// console.log(_getToken())
 
 function App() {
-  let [firstPage, setFirstPage] = useState('intro')
+  let [firstPage, setFirstPage] = useState('HomeMenu')
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={firstPage} screenOptions={{
@@ -53,6 +37,8 @@ function App() {
       >
         <Stack.Screen name="intro" component={IntroScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="RePassword" component={RePassword} />
+        <Stack.Screen name ="HomeMenu" component={HomeMenu} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
