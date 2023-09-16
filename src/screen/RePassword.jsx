@@ -33,31 +33,38 @@ async function sign_in(email,pwd) {
     }
 }
 
-function LoginScreen({ navigation }) {
+function RePassword({ navigation }) {
     let [email, setEmail] = useState('');
     let [pwd, setPwd] = useState('');
     let [swap, setSwap] = useState(true);
+    let [swap2, setSwap2] = useState(true);
     let [borderBlue, setBorderBlue] = useState(styles.input)
     let [borderBluePwd, setBorderBluePwd] = useState(styles.input)
     const swap_hide_show = () => {
         setSwap(!swap)
     }
+    const swap_hide_show2 = () => {
+        setSwap2(!swap2)
+    }
 
     return (
         <View style={{ flexDirection: 'column', height: "100%", backgroundColor: 'white' }}>
             <View style={{ flex: 1, width: '100%', marginTop: 40, alignItems: "center", position: "relative" }}>
-                <Text style={{ fontSize: 20, fontWeight: '500', marginTop: 90 }} >Sign In</Text>
-                <Text style={{ fontSize: 14, fontWeight: '400', marginTop: 10, marginBottom: 30 }} >Welcome to my app </Text>
-
+                <Text style={{ fontSize: 20, fontWeight: '500', marginTop: 90 }} >Create a new account</Text>
+                <View>
+                    <Text style={{  fontSize: 14, fontWeight: '400', marginTop: 10, marginBottom: 30 , width:300}} >A strong password helps prevent unauthorized access to your account. </Text> 
+                </View>
+                
                 <TextInput
                     onChangeText={(val) => { setEmail(val); setBorderBlue(styles.inputBlue); }}
                     onBlur={() => setBorderBlue(styles.input)}
-                    style={borderBlue} placeholder="Email" />
+                    secureTextEntry={swap2}
+                    style={borderBlue} placeholder="Password" />
                 <TextInput
                     onChangeText={(val) => { setPwd(val); setBorderBluePwd(styles.inputBlue); }}
                     onBlur={() => setBorderBluePwd(styles.input)}
                     secureTextEntry={swap} style={borderBluePwd}
-                    placeholder="Password" />
+                    placeholder="Confirm Password" />
                 <Text style={styles.forgotPwd}>Forget Password?</Text>
                 <View style={{ width: 100 }}>
                     {swap ? (
@@ -72,8 +79,21 @@ function LoginScreen({ navigation }) {
                         )}
 
                 </View>
+                <View style={{ width: 100 }}>
+                    {swap2 ? (
+                        <TouchableOpacity onPress={swap_hide_show2}>
+                            <Image style={styles.hideInput2} source={HidePwd} ></Image>
+                        </TouchableOpacity>)
+
+                        : (
+                            <TouchableOpacity onPress={swap_hide_show2}>
+                                <Image style={styles.showInput2} source={ShowPwd} ></Image>
+                            </TouchableOpacity>
+                        )}
+
+                </View>
                 <TouchableOpacity onPress={()=>sign_in(email,pwd)} style={styles.btn_sign_up}>
-                    <Text style={{ fontWeight: "700", fontSize: 14 }}>Sign in</Text>
+                    <Text style={{ fontWeight: "700", fontSize: 14 }}>Confirm password</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -113,6 +133,20 @@ const styles = StyleSheet.create({
         height: 20,
         resizeMode: "contain"
     },
+    hideInput2: {
+        position: 'absolute',
+        top: -135,
+        right: -120,
+        height: 23,
+        resizeMode: "contain"
+    }, 
+    showInput2: {
+        position: 'absolute',
+        top: -135,
+        right: -120,
+        height: 20,
+        resizeMode: "contain"
+    },
     forgotPwd: {
         marginTop: 10,
         alignSelf: "flex-end",
@@ -134,4 +168,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default LoginScreen
+export default RePassword
