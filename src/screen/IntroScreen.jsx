@@ -4,9 +4,12 @@ import {
     View,
     TouchableOpacity, Image, TextInput
 } from 'react-native';
+import {useStoreApp} from "../assets/Auth/Store"
 function IntroScreen({ navigation }) {
+    const {getStore , StoreDispatch} = useStoreApp()
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: "100%" }}>
+            
             <View style={{ position: 'absolute', zIndex: 10 }}>
                 <TouchableOpacity style={styles.introbtn} onPress={() => navigation.navigate('LoginScreen')}>
                     <View style={{position:'relative'}}>

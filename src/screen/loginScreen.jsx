@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {useStoreApp} from "../assets/Auth/Store"
 const Stack = createNativeStackNavigator();
 //Image
 import HidePwd from '../assets/imgs/pwd_close.png'
@@ -34,6 +35,10 @@ async function sign_in(email,pwd) {
 }
 
 function LoginScreen({ navigation }) {
+    const {getStore , StoreDispatch} = useStoreApp();
+    useEffect(()=>{
+        StoreDispatch({type : 'setSignPage' })
+    },[])
     let [email, setEmail] = useState('');
     let [pwd, setPwd] = useState('');
     let [swap, setSwap] = useState(true);
@@ -42,7 +47,6 @@ function LoginScreen({ navigation }) {
     const swap_hide_show = () => {
         setSwap(!swap)
     }
-
     return (
         <View style={{ flexDirection: 'column', height: "100%", backgroundColor: 'white' }}>
             <View style={{ flex: 1, width: '100%', marginTop: 40, alignItems: "center", position: "relative" }}>
