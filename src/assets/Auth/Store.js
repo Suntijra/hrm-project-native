@@ -16,6 +16,16 @@ function StoreReducer(state, action) {
                 usePage : "LoginScreen"
             }
         }
+        case "LoginSuccess" : {
+            return {
+                ...state,
+                isLogin : true,
+                token : action.payload.token,
+                email : action.payload.email,
+                role : action.payload.role,
+                status : action.payload.status
+            }
+        }
         default: return state
     }
 }
