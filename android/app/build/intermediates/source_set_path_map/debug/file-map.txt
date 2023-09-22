@@ -31,5 +31,6 @@ com.myapp-merged_res-29 D:\Github\hrm-project-native\android\app\build\intermedi
 com.myapp-debug-30 D:\Github\hrm-project-native\android\app\src\debug\res
 com.myapp-main-31 D:\Github\hrm-project-native\android\app\src\main\res
 com.myapp-packaged_res-32 D:\Github\hrm-project-native\node_modules\@react-native-async-storage\async-storage\android\build\intermediates\packaged_res\debug
-com.myapp-packaged_res-33 D:\Github\hrm-project-native\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
-com.myapp-packaged_res-34 D:\Github\hrm-project-native\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug
+com.myapp-packaged_res-33 D:\Github\hrm-project-native\node_modules\react-native-linear-gradient\android\build\intermediates\packaged_res\debug
+com.myapp-packaged_res-34 D:\Github\hrm-project-native\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
+com.myapp-packaged_res-35 D:\Github\hrm-project-native\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug
