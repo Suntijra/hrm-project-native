@@ -34,6 +34,16 @@ function StoreReducer(state, action) {
                 isLoading : false
             }
         }
+        case "LoginFail" : {
+            return {
+                ...state,
+                isLogin : true,
+                token : '',
+                email : '',
+                role : '',
+                status : ''
+            }
+        }
         case "SetLoading" : {
             return {
                 ...state,

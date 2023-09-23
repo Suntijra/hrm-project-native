@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState  } from "react";
 import {
   StyleSheet,
   Text,
@@ -19,6 +19,12 @@ import ShowPwd from "../assets/imgs/pwd_open.png";
 
 function LoginScreen({ navigation }) {
   const { getStore, StoreDispatch } = useStoreApp();
+  useEffect(()=>{
+    console.log('login is change',getStore.isLogin)
+    if(getStore.isLogin){
+      navigation.navigate('HomeMenu')
+    }
+  },[getStore.isLogin])
   let [email, setEmail] = useState("");
   let [pwd, setPwd] = useState("");
   let [swap, setSwap] = useState(true);
@@ -28,7 +34,7 @@ function LoginScreen({ navigation }) {
     setSwap(!swap);
   };
   const sign_in = async (email, pwd) => {
-    console.log("clickLogin", email, pwd);
+    // console.log("clickLogin", email, pwd);
     try {
       StoreDispatch({ type: 'setLoading', payload: { isLogin: true } })
       let response = await fetch(
@@ -40,32 +46,16 @@ function LoginScreen({ navigation }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,
-            password: pwd,
+            email: 'sunti.po1@unit.co.th',
+            password: 'Dom12345',
           }),
         }
       );
       let data = await response.json();
-      console.log("check ", data);
+      // console.log("check ", data);
       let { msg } = data
       if (msg === "success") {
-        await StoreDispatch({ type: "LoginSuccess", payload: data });
-        let login = getStore.isLogin
-        if (login) {
-          navigation.navigate('HomeMenu')
-        } else {
-          Alert.alert(
-            'Something wen wrong !! Login',
-            'Alert Message',
-            [
-              {
-                text: 'OK',      // Button text
-                onPress: () => console.log('OK Pressed'),
-              },
-            ],
-            { cancelable: false }
-          );
-        }
+        StoreDispatch({ type: "LoginSuccess", payload: data });
       } else {
         Alert.alert(
           'not found your email and password',
