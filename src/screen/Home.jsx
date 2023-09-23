@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,20 +11,44 @@ import {
   Platform,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-
-function HomeTab() {
+import { useStoreApp } from "../assets/Auth/Store";
+function HomeTab({ navigation }) {
+  let { getStore, StoreDispatch } = useStoreApp();
+  let [fname,setFname] = useState('')
+  const FetchEmployeeData = async () => {
+    console.log('ffff',getStore.token)
+    let req = await fetch(
+      "https://hrm-api-uat.unit.co.th/mobile/GET-EMPLOYEE",
+      {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: getStore.token,
+        }),
+      }
+    );
+    let result = await req.json();
+    console.log(result)
+  };
+  useEffect(() => {
+    console.log("token", getStore.token);
+    if ('') {
+      FetchEmployeeData();
+    } else {
+      navigation.navigate("LoginScreen");
+    }
+  });
   return (
     <ImageBackground source={require("../assets/imgs/Background.png")}>
       <View style={{ height: "100%", width: "100%" }}>
         <ScrollView style={sl.sv}>
           <StatusBar style="auto" />
-          <View style={sl.a1} >
+          <View style={sl.a1}>
             <View>
-              <Text
-                style={sl.a2}
-              >
-                LOGO
-              </Text>
+              <Text style={sl.a2}>LOGO</Text>
             </View>
             <View style={sl.profile_border}>
               <Image
@@ -33,11 +58,7 @@ function HomeTab() {
             </View>
           </View>
           <View>
-            <Text
-              style={sl.textWelcome}
-            >
-              Hi, Dom 😄
-            </Text>
+            <Text style={sl.textWelcome}>Hi, Dom 😄</Text>
           </View>
           <LinearGradient
             colors={["#03398A", "#064BF9"]}
@@ -45,10 +66,16 @@ function HomeTab() {
             end={{ x: 0, y: 0 }}
             style={sl.card}
           >
-            <View style={{ height: '10%' }}>
-              <Text style={{ color: 'white', fontSize: 16 }}>17 Aug 2021</Text>
+            <View style={{ height: "10%" }}>
+              <Text style={{ color: "white", fontSize: 16 }}>17 Aug 2021</Text>
             </View>
-            <View style={{ borderWidth: 0.5, marginTop: 10, borderColor: '#608DFF' }}></View>
+            <View
+              style={{
+                borderWidth: 0.5,
+                marginTop: 10,
+                borderColor: "#608DFF",
+              }}
+            ></View>
           </LinearGradient>
         </ScrollView>
       </View>
@@ -81,7 +108,7 @@ const sl = StyleSheet.create({
     // borderWidth: 1,
     height: 230,
     borderRadius: 32,
-    padding: 20
+    padding: 20,
   },
   sv: {
     padding: 10,
@@ -110,6 +137,5 @@ const sl = StyleSheet.create({
     }),
   },
 });
-
 
 export default HomeTab;
