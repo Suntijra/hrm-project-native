@@ -1,13 +1,11 @@
-import { Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { Text, View, ViewBase } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Icon ,Button } from '@rneui/themed';
 import Home from "./Home";
 import CalendarMenu from "./CalendarMenu"
 const Tab = createBottomTabNavigator();
 function HomeTabBottom() {
   return (
-    <Tab.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+    <Tab.Navigator initialRouteName="Calendar" screenOptions={{ headerShown: false }}>
       <Tab.Screen options={{
      
       }} name="Home" component={Home} />

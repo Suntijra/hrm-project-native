@@ -7,12 +7,12 @@ import {
   Image,
   TextInput,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl 
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Stack } from 'react-native-elements';
 import { useStoreApp } from "../assets/Auth/Store";
-const Stack = createNativeStackNavigator();
+
 //Image
 import HidePwd from "../assets/imgs/pwd_close.png";
 import ShowPwd from "../assets/imgs/pwd_open.png";
@@ -22,9 +22,11 @@ function LoginScreen({ navigation }) {
   useEffect(()=>{
     console.log('login is change',getStore.isLogin)
     if(getStore.isLogin){
+      StoreDispatch({ type: 'setLoading', payload: { isLogin: true } })
       navigation.navigate('HomeMenu')
     }
   },[getStore.isLogin])
+
   let [email, setEmail] = useState("");
   let [pwd, setPwd] = useState("");
   let [swap, setSwap] = useState(true);
@@ -34,7 +36,7 @@ function LoginScreen({ navigation }) {
     setSwap(!swap);
   };
   const sign_in = async (email, pwd) => {
-    // console.log("clickLogin", email, pwd);
+    console.log("clickLogin", email, pwd);
     try {
       StoreDispatch({ type: 'setLoading', payload: { isLogin: true } })
       let response = await fetch(
@@ -52,7 +54,7 @@ function LoginScreen({ navigation }) {
         }
       );
       let data = await response.json();
-      // console.log("check ", data);
+      console.log("check ", data);
       let { msg } = data
       if (msg === "success") {
         StoreDispatch({ type: "LoginSuccess", payload: data });
@@ -138,7 +140,7 @@ function LoginScreen({ navigation }) {
             )}
           </View>
           <TouchableOpacity
-            onPress={() => sign_in(email, pwd)}
+            onPress={() => {sign_in(email, pwd)}}
             style={styles.btn_sign_up}
           >
             <Text style={{ fontWeight: "700", fontSize: 14 }}>Sign in</Text>

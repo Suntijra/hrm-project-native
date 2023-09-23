@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState  } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,14 +9,49 @@ import {
   Image,
   ImageBackground,
   Platform,
+  Alert,
+  Button
+  ,RefreshControl
 } from "react-native";
+import { Icon, Skeleton } from "@rneui/themed";
 import LinearGradient from "react-native-linear-gradient";
 import { useStoreApp } from "../assets/Auth/Store";
+import LoadingFullScreen from "./components/LoadingFullScreen";
+function formatDate(date) {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
+}
 function HomeTab({ navigation }) {
   let { getStore, StoreDispatch } = useStoreApp();
-  let [fname,setFname] = useState('')
+  let [fname, setFname] = useState("");
+  let [imgprofile, setImgProfile] = useState("");
+  let date = formatDate(new Date());
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    // Simulate a refresh by adding a delay using setTimeout.
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000); // 2 seconds
+  };
   const FetchEmployeeData = async () => {
-    console.log('ffff',getStore.token)
     let req = await fetch(
       "https://hrm-api-uat.unit.co.th/mobile/GET-EMPLOYEE",
       {
@@ -31,34 +66,83 @@ function HomeTab({ navigation }) {
       }
     );
     let result = await req.json();
-    console.log(result)
+    StoreDispatch({
+      type: "SetLoading",
+      payload: {
+        isLoading: false,
+      },
+    });
+    let msg = result.msg;
+    let data = result.data;
+    let emp = data.emp;
+    if (msg === "good") {
+      setImgProfile(emp.img_profile);
+      setFname(emp.fname);
+    } else {
+      StoreDispatch({ type: "LoginFail" });
+      Alert.alert("Error", "SomeThing went wrong on get EMP", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("LoginScreen"),
+        },
+      ]);
+    }
   };
   useEffect(() => {
-    console.log("token", getStore.token);
-    if ('') {
+    const token = getStore.token;
+    if (token) {
       FetchEmployeeData();
     } else {
       navigation.navigate("LoginScreen");
     }
-  });
-  return (
+  }, []);
+
+  useEffect(() => {
+    console.log("rerender by arr");
+  }, [fname, imgprofile]);
+
+
+  return getStore.isLoading ? (
+    <LoadingFullScreen />
+  ) : (
     <ImageBackground source={require("../assets/imgs/Background.png")}>
+      {/* <Button onPress={handleRefresh} title={'isRefreshing'} /> */}
       <View style={{ height: "100%", width: "100%" }}>
-        <ScrollView style={sl.sv}>
+        <ScrollView 
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#007AFF" // Color of the refresh indicator
+            title="Pull to refresh"
+            titleColor="#007AFF" // Color of the title text
+          />
+        }
+        style={sl.sv}
+         
+        >
           <StatusBar style="auto" />
           <View style={sl.a1}>
             <View>
               <Text style={sl.a2}>LOGO</Text>
             </View>
             <View style={sl.profile_border}>
-              <Image
-                style={sl.profile}
-                source={require("../assets/imgs/lufy.png")}
-              ></Image>
+              {!getStore.isLoading ? (
+                <Image
+                  style={sl.profile}
+                  source={
+                    imgprofile
+                      ? { uri: imgprofile }
+                      : require("../assets/imgs/lufy.png")
+                  }
+                ></Image>
+              ) : (
+                <Skeleton circle width={60} height={60} />
+              )}
             </View>
           </View>
           <View>
-            <Text style={sl.textWelcome}>Hi, Dom 😄</Text>
+            <Text style={sl.textWelcome}>Hi, {fname} 😄</Text>
           </View>
           <LinearGradient
             colors={["#03398A", "#064BF9"]}
@@ -67,7 +151,7 @@ function HomeTab({ navigation }) {
             style={sl.card}
           >
             <View style={{ height: "10%" }}>
-              <Text style={{ color: "white", fontSize: 16 }}>17 Aug 2021</Text>
+              <Text style={{ color: "white", fontSize: 16 }}>{date}</Text>
             </View>
             <View
               style={{
@@ -77,6 +161,16 @@ function HomeTab({ navigation }) {
               }}
             ></View>
           </LinearGradient>
+          <View
+            style={{
+              marginTop: 10,
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ color: "#28293D", fontWeight: "500", fontSize: 16 }}>
+              Menu
+            </Text>
+          </View>
         </ScrollView>
       </View>
     </ImageBackground>
@@ -115,8 +209,8 @@ const sl = StyleSheet.create({
   },
   profile: {
     borderRadius: 50,
-    width: 55,
-    height: 55,
+    width: 60,
+    height: 60,
     borderColor: "white",
     borderWidth: 3,
     ...Platform.select({

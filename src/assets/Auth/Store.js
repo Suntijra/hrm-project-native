@@ -37,7 +37,7 @@ function StoreReducer(state, action) {
         case "LoginFail" : {
             return {
                 ...state,
-                isLogin : true,
+                isLogin : false,
                 token : '',
                 email : '',
                 role : '',
