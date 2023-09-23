@@ -17,24 +17,10 @@ function HomeTab() {
       <View style={{ height: "100%", width: "100%" }}>
         <ScrollView style={sl.sv}>
           <StatusBar style="auto" />
-          <View
-            style={{
-              width: "100%",
-              height: "100%",
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-            }}
-          >
+          <View style={sl.a1} >
             <View>
               <Text
-                style={{
-                  fontSize: 30,
-                  marginTop: 50,
-                  fontWeight: "800",
-                  color: "#064BF9",
-                }}
+                style={sl.a2}
               >
                 LOGO
               </Text>
@@ -48,12 +34,7 @@ function HomeTab() {
           </View>
           <View>
             <Text
-              style={{
-                marginTop: 20,
-                color: "#28293D",
-                fontSize: 18,
-                fontWeight: "500",
-              }}
+              style={sl.textWelcome}
             >
               Hi, Dom 😄
             </Text>
@@ -64,10 +45,10 @@ function HomeTab() {
             end={{ x: 0, y: 0 }}
             style={sl.card}
           >
-            <View style={{height:'10%'}}>
-                <Text style={{color:'white', fontSize:16}}>17 Aug 2021</Text>
+            <View style={{ height: '10%' }}>
+              <Text style={{ color: 'white', fontSize: 16 }}>17 Aug 2021</Text>
             </View>
-            <View style={{borderWidth:0.5,marginTop:10,borderColor:'#608DFF'}}></View>
+            <View style={{ borderWidth: 0.5, marginTop: 10, borderColor: '#608DFF' }}></View>
           </LinearGradient>
         </ScrollView>
       </View>
@@ -75,6 +56,26 @@ function HomeTab() {
   );
 }
 const sl = StyleSheet.create({
+  textWelcome: {
+    marginTop: 20,
+    color: "#28293D",
+    fontSize: 18,
+    fontWeight: "500",
+  },
+  a2: {
+    fontSize: 30,
+    marginTop: 50,
+    fontWeight: "800",
+    color: "#064BF9",
+  },
+  a1: {
+    width: "100%",
+    height: "100%",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
   card: {
     marginTop: 20,
     // borderWidth: 1,
@@ -109,5 +110,6 @@ const sl = StyleSheet.create({
     }),
   },
 });
+
 
 export default HomeTab;

@@ -16,6 +16,13 @@ function StoreReducer(state, action) {
                 usePage : "LoginScreen"
             }
         }
+        case 'SetPage' : {
+            let page = action.payload.usePage
+            return {
+                ...state,
+                usePage : page
+            }
+        }
         case "LoginSuccess" : {
             return {
                 ...state,
@@ -23,7 +30,14 @@ function StoreReducer(state, action) {
                 token : action.payload.token,
                 email : action.payload.email,
                 role : action.payload.role,
-                status : action.payload.status
+                status : action.payload.status,
+                isLoading : false
+            }
+        }
+        case "SetLoading" : {
+            return {
+                ...state,
+                isLoading : action.payload.isLoading
             }
         }
         default: return state
@@ -35,7 +49,8 @@ export function StoreProvider({ children }) {
         isLogin: false,
         token: '',
         email: '',
-        usePage: 'intro'
+        usePage: 'intro',
+        isLoading : false
     }
     const [getStore, StoreDispatch] = useReducer(StoreReducer, initialStore)
 

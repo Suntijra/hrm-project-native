@@ -20,6 +20,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
  function NavigatePage() {
   const {getStore , StoreDispatch} = useStoreApp();
+  let token = getStore.token
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={getStore.usePage} screenOptions={{

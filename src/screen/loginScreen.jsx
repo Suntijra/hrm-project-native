@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  Alert
+  Alert,
+  ActivityIndicator
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -26,9 +27,10 @@ function LoginScreen({ navigation }) {
   const swap_hide_show = () => {
     setSwap(!swap);
   };
-  async function sign_in(email, pwd) {
+  const sign_in = async (email, pwd) => {
     console.log("clickLogin", email, pwd);
     try {
+      StoreDispatch({ type: 'setLoading', payload: { isLogin: true } })
       let response = await fetch(
         "https://hrm-api-uat.unit.co.th/mobile/login",
         {
@@ -45,21 +47,37 @@ function LoginScreen({ navigation }) {
       );
       let data = await response.json();
       console.log("check ", data);
-      let {msg} = data
+      let { msg } = data
       if (msg === "success") {
-        StoreDispatch({ type: "LoginSuccess", payload: data  });
-      } else {
-        Alert.alert(
-            'not found your email and password',      // Title of the alert
-            'Alert Message',    // Message content of the alert
+        await StoreDispatch({ type: "LoginSuccess", payload: data });
+        let login = getStore.isLogin
+        if (login) {
+          navigation.navigate('HomeMenu')
+        } else {
+          Alert.alert(
+            'Something wen wrong !! Login',
+            'Alert Message',
             [
               {
                 text: 'OK',      // Button text
-                onPress: () => console.log('OK Pressed'), // Action to perform when this button is pressed
+                onPress: () => console.log('OK Pressed'),
               },
             ],
-            { cancelable: false } // Make the alert non-cancelable by tapping outside of it
+            { cancelable: false }
           );
+        }
+      } else {
+        Alert.alert(
+          'not found your email and password',
+          'Alert Message',
+          [
+            {
+              text: 'OK',      // Button text
+              onPress: () => console.log('OK Pressed'),
+            },
+          ],
+          { cancelable: false } // Make the alert non-cancelable by tapping outside of it
+        );
       }
     } catch (err) {
       console.log(err);
@@ -73,67 +91,69 @@ function LoginScreen({ navigation }) {
         backgroundColor: "white",
       }}
     >
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          marginTop: 40,
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
-        <Text style={{ fontSize: 20, fontWeight: "500", marginTop: 90 }}>
-          Sign In
-        </Text>
-        <Text
+      {
+      getStore.isLoading ?  <ActivityIndicator style={{width : '100%' , height : "100%"}} size="large" color="#0000ff" /> :
+        <View
           style={{
-            fontSize: 14,
-            fontWeight: "400",
-            marginTop: 10,
-            marginBottom: 30,
+            flex: 1,
+            width: "100%",
+            marginTop: 40,
+            alignItems: "center",
+            position: "relative",
           }}
         >
-          Welcome to my app {getStore.email}
-        </Text>
+          <Text style={{ fontSize: 20, fontWeight: "500", marginTop: 90 }}>
+            Sign In
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "400",
+              marginTop: 10,
+              marginBottom: 30,
+            }}
+          >
+            Welcome to my app
+          </Text>
 
-        <TextInput
-          onChangeText={(val) => {
-            setEmail(val);
-            setBorderBlue(styles.inputBlue);
-          }}
-          onBlur={() => setBorderBlue(styles.input)}
-          style={borderBlue}
-          placeholder="Email"
-        />
-        <TextInput
-          onChangeText={(val) => {
-            setPwd(val);
-            setBorderBluePwd(styles.inputBlue);
-          }}
-          onBlur={() => setBorderBluePwd(styles.input)}
-          secureTextEntry={swap}
-          style={borderBluePwd}
-          placeholder="Password"
-        />
-        <Text style={styles.forgotPwd}>Forget Password?</Text>
-        <View style={{ width: 100 }}>
-          {swap ? (
-            <TouchableOpacity onPress={swap_hide_show}>
-              <Image style={styles.hideInput} source={HidePwd}></Image>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={swap_hide_show}>
-              <Image style={styles.showInput} source={ShowPwd}></Image>
-            </TouchableOpacity>
-          )}
-        </View>
-        <TouchableOpacity
-          onPress={() => sign_in(email, pwd)}
-          style={styles.btn_sign_up}
-        >
-          <Text style={{ fontWeight: "700", fontSize: 14 }}>Sign in</Text>
-        </TouchableOpacity>
-      </View>
+          <TextInput
+            onChangeText={(val) => {
+              setEmail(val);
+              setBorderBlue(styles.inputBlue);
+            }}
+            onBlur={() => setBorderBlue(styles.input)}
+            style={borderBlue}
+            placeholder="Email"
+          />
+          <TextInput
+            onChangeText={(val) => {
+              setPwd(val);
+              setBorderBluePwd(styles.inputBlue);
+            }}
+            onBlur={() => setBorderBluePwd(styles.input)}
+            secureTextEntry={swap}
+            style={borderBluePwd}
+            placeholder="Password"
+          />
+          <Text style={styles.forgotPwd}>Forget Password?</Text>
+          <View style={{ width: 100 }}>
+            {swap ? (
+              <TouchableOpacity onPress={swap_hide_show}>
+                <Image style={styles.hideInput} source={HidePwd}></Image>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={swap_hide_show}>
+                <Image style={styles.showInput} source={ShowPwd}></Image>
+              </TouchableOpacity>
+            )}
+          </View>
+          <TouchableOpacity
+            onPress={() => sign_in(email, pwd)}
+            style={styles.btn_sign_up}
+          >
+            <Text style={{ fontWeight: "700", fontSize: 14 }}>Sign in</Text>
+          </TouchableOpacity>
+        </View>}
     </View>
   );
 }
