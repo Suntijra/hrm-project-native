@@ -56,7 +56,6 @@ function HomeTab({ navigation }) {
   let [imgprofile, setImgProfile] = useState("");
   let date = formatDate(new Date());
   const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = async () => {
     console.log("onRefresh");
     setRefreshing(true);
