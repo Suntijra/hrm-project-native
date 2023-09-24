@@ -1,8 +1,7 @@
-import { useEffect, useState  } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   View,
@@ -10,13 +9,27 @@ import {
   ImageBackground,
   Platform,
   Alert,
-  Button
-  ,RefreshControl
+  RefreshControl,
+  Pressable,
 } from "react-native";
+// navigate
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// react native element
 import { Icon, Skeleton } from "@rneui/themed";
 import LinearGradient from "react-native-linear-gradient";
 import { useStoreApp } from "../assets/Auth/Store";
-import LoadingFullScreen from "./components/LoadingFullScreen";
+const HomeStack = createNativeStackNavigator();
+//components
+import LeaveScreen from "./LeaveScreen";
+// import LoadingFullScreen from "./components/LoadingFullScreen";
+function HomeStackMenu(){
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen component={LeaveScreen} />
+    </HomeStack.Navigator>
+  )
+}
 function formatDate(date) {
   const months = [
     "Jan",
@@ -44,12 +57,11 @@ function HomeTab({ navigation }) {
   let date = formatDate(new Date());
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = () => {
-    // Simulate a refresh by adding a delay using setTimeout.
+  const onRefresh = async () => {
+    console.log("onRefresh");
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000); // 2 seconds
+    await FetchEmployeeData();
+    setRefreshing(false);
   };
   const FetchEmployeeData = async () => {
     let req = await fetch(
@@ -89,37 +101,52 @@ function HomeTab({ navigation }) {
     }
   };
   useEffect(() => {
+    console.log("render 01");
     const token = getStore.token;
+    StoreDispatch({
+      type: "SetLoading",
+      payload: {
+        isLoading: false,
+      },
+    });
     if (token) {
+      StoreDispatch({
+        type: "SetLoading",
+        payload: {
+          isLoading: true,
+        },
+      });
       FetchEmployeeData();
     } else {
       navigation.navigate("LoginScreen");
     }
-  }, []);
+  }, [refreshing]);
 
   useEffect(() => {
     console.log("rerender by arr");
   }, [fname, imgprofile]);
 
+  const GoToLeavePage = () => {
+    navigation.navigate("LeaveScreen");
+  };
+  const GoToOffsitePage = () => {
+    navigation.navigate("OffsiteScreen");
+  };
 
-  return getStore.isLoading ? (
-    <LoadingFullScreen />
-  ) : (
+  return (
     <ImageBackground source={require("../assets/imgs/Background.png")}>
-      {/* <Button onPress={handleRefresh} title={'isRefreshing'} /> */}
       <View style={{ height: "100%", width: "100%" }}>
-        <ScrollView 
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="#007AFF" // Color of the refresh indicator
-            title="Pull to refresh"
-            titleColor="#007AFF" // Color of the title text
-          />
-        }
-        style={sl.sv}
-         
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#007AFF" // Color of the refresh indicator
+              title="Pull to refresh"
+              titleColor="#007AFF" // Color of the title text
+            />
+          }
+          style={sl.sv}
         >
           <StatusBar style="auto" />
           <View style={sl.a1}>
@@ -137,13 +164,14 @@ function HomeTab({ navigation }) {
                   }
                 ></Image>
               ) : (
-                <Skeleton circle width={60} height={60} />
+                <Skeleton circle animation="pulse" width={60} height={60} />
               )}
             </View>
           </View>
           <View>
             <Text style={sl.textWelcome}>Hi, {fname} 😄</Text>
           </View>
+          {/* dashboardHome */}
           <LinearGradient
             colors={["#03398A", "#064BF9"]}
             start={{ x: 1, y: 1 }}
@@ -171,12 +199,141 @@ function HomeTab({ navigation }) {
               Menu
             </Text>
           </View>
+          <View style={sl.menuContainer}>
+            {/* Menu */}
+            <View>
+              {getStore.isLoading ? (
+                <Skeleton
+                  skeletonStyle={{ borderRadius: 16 }}
+                  animation="pulse"
+                  width={60}
+                  height={60}
+                />
+              ) : (
+                <Pressable onPress={GoToLeavePage}>
+                  <LinearGradient
+                    colors={["#608DFF", "#043C9A"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    locations={[0.0841, 0.7327]}
+                    style={sl.btnMenu}
+                  >
+                    <Image
+                      style={sl.imgMenuIcon}
+                      source={require("../assets/icon/leaveIcon.png")}
+                    />
+                  </LinearGradient>
+                </Pressable>
+              )}
+
+              <Text style={sl.menuText}>Leave</Text>
+            </View>
+            <View>
+              {getStore.isLoading ? (
+                <Skeleton
+                  skeletonStyle={{ borderRadius: 16 }}
+                  animation="pulse"
+                  width={60}
+                  height={60}
+                />
+              ) : (
+                <LinearGradient
+                  colors={["#608DFF", "#043C9A"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  locations={[0.0841, 0.7327]}
+                  style={sl.btnMenu}
+                >
+                  <Image
+                    style={sl.imgMenuIcon}
+                    source={require("../assets/icon/offsite.png")}
+                  />
+                </LinearGradient>
+              )}
+              <Text style={sl.menuText}>Offsite</Text>
+            </View>
+            <View>
+              {getStore.isLoading ? (
+                <Skeleton
+                  skeletonStyle={{ borderRadius: 16 }}
+                  animation="pulse"
+                  width={60}
+                  height={60}
+                />
+              ) : (
+                <LinearGradient
+                  colors={["#608DFF", "#043C9A"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  locations={[0.0841, 0.7327]}
+                  style={sl.btnMenu}
+                >
+                  <Image
+                    style={sl.imgMenuIcon}
+                    source={require("../assets/icon/overtime.png")}
+                  />
+                </LinearGradient>
+              )}
+              <Text style={sl.menuText}>Overtime</Text>
+            </View>
+            <View>
+              {getStore.isLoading ? (
+                <Skeleton
+                  skeletonStyle={{ borderRadius: 16 }}
+                  animation="pulse"
+                  width={60}
+                  height={60}
+                />
+              ) : (
+                <LinearGradient
+                  colors={["#608DFF", "#043C9A"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  locations={[0.0841, 0.7327]}
+                  style={sl.btnMenu}
+                >
+                  <Image
+                    style={sl.imgMenuIcon}
+                    source={require("../assets/icon/leaveIcon.png")}
+                  />
+                </LinearGradient>
+              )}
+              <Text style={sl.menuText}>Document</Text>
+            </View>
+          </View>
         </ScrollView>
       </View>
     </ImageBackground>
   );
 }
 const sl = StyleSheet.create({
+  imgMenuIcon: {
+    width: 40,
+    height: 40,
+    alignContent: "center",
+    justifyContent: "center",
+    textAlign: "center",
+  },
+  menuText: {
+    width: "100%",
+    textAlign: "center",
+    color: "#28293D",
+    fontWeight: "800",
+  },
+  menuContainer: {
+    width: "100%",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  btnMenu: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    flex: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   textWelcome: {
     marginTop: 20,
     color: "#28293D",
@@ -205,7 +362,7 @@ const sl = StyleSheet.create({
     padding: 20,
   },
   sv: {
-    padding: 10,
+    padding: 20,
   },
   profile: {
     borderRadius: 50,
