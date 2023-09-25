@@ -23,7 +23,7 @@ const HomeStack = createNativeStackNavigator();
 //components
 import LeaveScreen from "./LeaveScreen";
 // import LoadingFullScreen from "./components/LoadingFullScreen";
-function HomeStackMenu(){
+function HomeStackMenu() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen component={LeaveScreen} />

@@ -11,52 +11,90 @@ const Stack = createNativeStackNavigator();
 //Image
 import HidePwd from '../assets/imgs/pwd_close.png'
 import ShowPwd from '../assets/imgs/pwd_open.png'
+import { Alert } from 'react-native';
+//store
+import { useStoreApp } from '../assets/Auth/Store';
 
-async function confirm_pwd(email,pwd) {
-    console.log('clickLogin',email,pwd)
-    try {
-        let response = await fetch('https://uat.maxmart.store:4040/mobile/login', {
-            method: 'POST',
-            headers: {
-                "Accept": "*/*",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                password: pwd
-            })
-        })
-        let data = await response.json()
-        console.log('check ', data)
-    } catch (err) {
-        console.log(err)
-    }
-}
 
-function RePassword({ navigation }) {
-    let [email, setEmail] = useState('');
+function RePassword({ navigation, route }) {
     let [pwd, setPwd] = useState('');
+    let [confirmPwd, setConfirmPwd] = useState('');
     let [swap, setSwap] = useState(true);
     let [swap2, setSwap2] = useState(true);
     let [borderBlue, setBorderBlue] = useState(styles.input)
     let [borderBluePwd, setBorderBluePwd] = useState(styles.input)
+    const { getStore, StoreDispatch } = useStoreApp();
+    console.log('get param ', route.params.old_pwd)
+    const FetchRePassword = async () => {
+        try {
+            if (pwd === confirmPwd) {
+                let headersList = {
+                    "Accept": "*/*",
+                    "Content-Type": "application/json"
+                }
+                let token = getStore.token
+                let email = getStore.email
+                let old = route.params.old_pwd
+                let bodyContent = JSON.stringify({
+                    "token": token,
+                    "new_password": pwd,
+                    "old_password": old,
+                    "email": email
+                });
+
+                let response = await fetch("https://hrm-api-uat.unit.co.th/mobile/login/first", {
+                    method: "POST",
+                    body: bodyContent,
+                    headers: headersList
+                });
+
+                let data = await response.json();
+                console.log(data);
+                let msg = data.msg 
+               
+            } else {
+                Alert.alert('Info','password and confirm password not match',
+                [
+                    {
+                        text : "close",
+                        onPress : ()=> console.log('close')
+                    }
+                ]
+                )
+            }
+        } catch (error) {
+            Alert.alert(
+                'Error', "Something went wrong ", [
+                {
+                    text: 'ok',
+                    onPress: () => console.log('close err fetch rePassword')
+                }
+            ]
+            )
+
+        }
+    }
+
+    const confirm_pwd = () => {
+        FetchRePassword()
+    }
+
     const swap_hide_show = () => {
         setSwap(!swap)
     }
     const swap_hide_show2 = () => {
         setSwap2(!swap2)
     }
-
     return (
         <View style={{ flexDirection: 'column', height: "100%", backgroundColor: 'white' }}>
             <View style={{ flex: 1, width: '100%', marginTop: 40, alignItems: "center", position: "relative" }}>
                 <Text style={{ fontSize: 20, fontWeight: '500', marginTop: 90 }} >Create a new account</Text>
                 <View>
-                    <Text style={{  fontSize: 14, fontWeight: '400', marginTop: 10, marginBottom: 30 , width:300}} >A strong password helps prevent unauthorized access to your account. </Text> 
+                    <Text style={{ fontSize: 14, fontWeight: '400', marginTop: 10, marginBottom: 30, width: 300 }} >A strong password helps prevent unauthorized access to your account. </Text>
                 </View>
-                
+
                 <TextInput
-                    onChangeText={(val) => { setEmail(val); setBorderBlue(styles.inputBlue); }}
+                    onChangeText={(val) => { setConfirmPwd(val); setBorderBlue(styles.inputBlue); }}
                     onBlur={() => setBorderBlue(styles.input)}
                     secureTextEntry={swap2}
                     style={borderBlue} placeholder="Password" />
@@ -92,7 +130,7 @@ function RePassword({ navigation }) {
                         )}
 
                 </View>
-                <TouchableOpacity onPress={()=>confirm_pwd(email,pwd)} style={styles.btn_sign_up}>
+                <TouchableOpacity onPress={() => confirm_pwd()} style={styles.btn_sign_up}>
                     <Text style={{ fontWeight: "700", fontSize: 14 }}>Confirm password</Text>
                 </TouchableOpacity>
             </View>
@@ -139,7 +177,7 @@ const styles = StyleSheet.create({
         right: -120,
         height: 23,
         resizeMode: "contain"
-    }, 
+    },
     showInput2: {
         position: 'absolute',
         top: -135,

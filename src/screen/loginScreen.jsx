@@ -17,15 +17,8 @@ import { useStoreApp } from "../assets/Auth/Store";
 import HidePwd from "../assets/imgs/pwd_close.png";
 import ShowPwd from "../assets/imgs/pwd_open.png";
 
-function LoginScreen({ navigation }) {
+function LoginScreen({ navigation  }) {
   const { getStore, StoreDispatch } = useStoreApp();
-  useEffect(()=>{
-    console.log('login is change',getStore.isLogin)
-    if(getStore.isLogin){
-      StoreDispatch({ type: 'setLoading', payload: { isLogin: true } })
-      navigation.navigate('HomeMenu')
-    }
-  },[getStore.isLogin])
 
   let [email, setEmail] = useState("");
   let [pwd, setPwd] = useState("");
@@ -75,6 +68,19 @@ function LoginScreen({ navigation }) {
       console.log(err);
     }
   }
+  useEffect(()=>{
+    console.log('login is change',getStore.isLogin)
+    let isLogin = getStore.isLogin
+    let status = getStore.status
+    console.log('status',status)
+    if(isLogin && status === 'approved' ){
+      StoreDispatch({ type: 'setLoading', payload: { isLogin: true } })
+      navigation.navigate('HomeMenu')
+    }else if(status === 'first'){
+      console.log('after param',{old_pwd : pwd})
+      navigation.navigate('RePassword',{old_pwd : pwd})
+    }
+  },[getStore.isLogin])
   return (
     <View
       style={{
