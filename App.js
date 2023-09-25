@@ -13,7 +13,6 @@ import RePassword from './src/screen/RePassword';
 import HomeMenu from './src/screen/HomeMenu';
 import { StoreProvider, useStoreApp } from './src/assets/Auth/Store'
 import LeaveScreen from './src/screen/LeaveScreen';
-
 // navigate
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -23,7 +22,8 @@ function NavigatePage() {
   let token = getStore.token
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={getStore.usePage} screenOptions={{
+      <Stack.Navigator initialRouteName={getStore.usePage} 
+      screenOptions={{
         headerShown: false,
       }}
       >
